@@ -4,7 +4,10 @@
   "description": "wishboard 푸쉬 알림 서버",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "build": "webpack --config ./webpack.config.js --mode development",
+    "build:production": "webpack --config ./webpack.config.js --mode production",
+    "start": "node dist/pushScheduler.js"
   },
   "repository": {
     "type": "git",
