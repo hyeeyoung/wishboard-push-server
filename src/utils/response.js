@@ -10,7 +10,7 @@ const StatusCode = {
 
 const SuccessMessage = {
   notiFCMSend: '알림 전송 성공',
-  
+
   notiPushServiceStart: '푸쉬 알림 서비스 시작',
   notiPushServiceExit: '푸쉬 알림 서비스 종료',
   notiSchedulerStart: '푸쉬 알림 스케줄러 동작',

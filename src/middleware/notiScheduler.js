@@ -1,6 +1,6 @@
-const { firebaseAdmin } = require("../config/firebaseAdmin");
-const logger = require("../config/winston");
-const { SuccessMessage, ErrorMessage } = require("../utils/response");
+const { firebaseAdmin } = require('../config/firebaseAdmin');
+const logger = require('../config/winston');
+const { SuccessMessage, ErrorMessage } = require('../utils/response');
 const Noti = require('../models/noti');
 const { Strings } = require('../utils/strings');
 const { NotiType } = require('../utils/notiType');
@@ -26,7 +26,7 @@ async function sendFcmTokenToFirebase(message) {
     return true;
   } catch (e) {
     const firebaseError = { err: e };
-    if (firebaseError.err.code == "messaging/invalid-payload") {
+    if (firebaseError.err.code == 'messaging/invalid-payload') {
       logger.error(ErrorMessage.notiFCMSendError);
     } else {
       logger.error(e);

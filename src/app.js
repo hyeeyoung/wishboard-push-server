@@ -1,8 +1,8 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const helmet = require("helmet");
-const hpp = require("hpp");
-const morgan = require("morgan");
+const helmet = require('helmet');
+const hpp = require('hpp');
+const morgan = require('morgan');
 const logger = require('./config/winston');
 require('dotenv').config({ path: '../.env' });
 const port = process.env.PORT;
@@ -21,10 +21,10 @@ app.use(express.json());
 app.use(helmet());
 app.use(hpp());
 
-if (nodeEnv === "production") {
-  morganFormat = "combined"; // Apache 표준
+if (nodeEnv === 'production') {
+  morganFormat = 'combined'; // Apache 표준
 } else {
-  morganFormat = "dev";
+  morganFormat = 'dev';
 }
 app.use(morgan(morganFormat, { stream: logger.stream }));
 
@@ -42,7 +42,7 @@ app.listen(port, () => {
 
   /** 앱 시작과 동시에 푸쉬알림 스케줄러 실행 */
   logger.info(SuccessMessage.notiSchedulerStart);
-  schedule.scheduleJob("0/30 * * * *", function () {
+  schedule.scheduleJob('0/30 * * * *', function () {
     schduleService.sendPushNotification();
   });
 });

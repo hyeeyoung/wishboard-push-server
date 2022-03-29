@@ -19,7 +19,7 @@ const pool = mysql.createPool({
 logger.info(TAG_SUCCESS);
 
 module.exports = {
-  connection: async function(){
+  connection: async function () {
     const connection = await pool.getConnection(async (conn) => conn);
     try {
       return connection;
@@ -37,13 +37,13 @@ module.exports = {
       }
     }
   },
-  query: async function(query, ...args){
+  query: async function (query, ...args) {
     let rows;
     const connection = await this.connection(async (conn) => conn);
-    
-    if(!args){
+
+    if (!args) {
       rows = await connection.query(query);
-    }else{
+    } else {
       rows = await connection.query(query, args);
     }
     connection.release();

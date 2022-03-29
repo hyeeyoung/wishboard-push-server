@@ -3,9 +3,6 @@ const Strings = {
   notiMessageTitle: '상품일정알림',
   notiMessageDescription: '알림이 있습니다.',
 
-  INSERT: 'INSERT',
-  UPSERT: 'UPSERT',
-
   //* 추후 전체 공지 알림 예정일 경우 사용
   // NOTI_SCREEN: 'NOTI_SCREEN',
   // EVENT_SCEREEN: 'EVENT_SCEREEN',
