@@ -3,6 +3,7 @@
 
 name: pushServer CICD
 on:
+  push:
   pull_request:
     branches: 
       - main
