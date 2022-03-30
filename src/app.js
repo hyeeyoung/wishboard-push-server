@@ -36,7 +36,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   process.send('ready');
   logger.info(`[Push Server] on port ${port} | ${nodeEnv}`);
 
@@ -49,7 +49,7 @@ app.listen(port, () => {
 
 process.on('SIGINT', function () {
   isDisableKeepAlive = true;
-  app.close(function () {
+  server.close(function () {
     logger.info('pm2 process closed');
     schedule.gracefulShutdown().then(() => process.exit(0));
     logger.info(SuccessMessage.notiSchedulerExit);
