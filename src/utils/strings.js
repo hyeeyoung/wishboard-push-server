@@ -1,7 +1,9 @@
 const Strings = {
   /* 알림 */
   notiMessageTitle: '상품일정알림',
-  notiMessageDescription: '알림이 있습니다.',
+  after30minutes: '30분 후에',
+  notiMessageDescription: '아이템이 있어요!',
+  notiMessageCountDescription: '상품 일정이 있어요!',
 
   //* 추후 전체 공지 알림 예정일 경우 사용
   // NOTI_SCREEN: 'NOTI_SCREEN',

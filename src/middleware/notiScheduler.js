@@ -54,13 +54,13 @@ module.exports = {
             token: '',
           };
           if (numOfNotiItems === 1) {
-            message.notification.body = `${
+            message.notification.body = `${Strings.after30minutes} ${
               NotiType[notiList[token][0].notiType]
             } ${Strings.notiMessageDescription}`;
           } else {
-            message.notification.body = `${
+            message.notification.body = `${Strings.after30minutes} ${
               NotiType[notiList[token][0].notiType]
-            } 알림 외 ${numOfNotiItems}개의 ${Strings.notiMessageDescription}`;
+            } 외 ${numOfNotiItems}개의 ${Strings.notiMessageCountDescription}`;
           }
           message.token = token;
           messages.push(message);
