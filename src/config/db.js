@@ -18,21 +18,36 @@ const pool = mysql.createPool({
 
 logger.info(TAG_SUCCESS);
 
-exports.connection = async function () {
-  const connection = await pool.getConnection(async (conn) => conn);
-  try {
-    return connection;
-  } catch (err) {
-    switch (err.code) {
-      case 'PROTOCOL_CONNECTION_LOST':
-        logger.error(TAG_PROTOCOL_CONNECTION_LOST);
-        break;
-      case 'ER_CON_COUNT_ERROR':
-        logger.error(TAG_ER_CON_COUNT_ERROR);
-        break;
-      case 'ECONNREFUSED':
-        logger.error(TAG_ECONNREFUSED);
-        break;
+module.exports = {
+  connection: async function () {
+    const connection = await pool.getConnection(async (conn) => conn);
+    try {
+      return connection;
+    } catch (err) {
+      switch (err.code) {
+        case 'PROTOCOL_CONNECTION_LOST':
+          logger.error(TAG_PROTOCOL_CONNECTION_LOST);
+          break;
+        case 'ER_CON_COUNT_ERROR':
+          logger.error(TAG_ER_CON_COUNT_ERROR);
+          break;
+        case 'ECONNREFUSED':
+          logger.error(TAG_ECONNREFUSED);
+          break;
+      }
     }
-  }
+  },
+  query: async function (query, ...args) {
+    let rows;
+    const connection = await this.connection(async (conn) => conn);
+
+    if (!args) {
+      rows = await connection.query(query);
+    } else {
+      rows = await connection.query(query, args);
+    }
+    connection.release();
+
+    return rows;
+  },
 };
