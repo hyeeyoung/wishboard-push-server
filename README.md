@@ -12,4 +12,4 @@ TEAM: Hyeeyoung
 <br>
 
 ## Architecture
-/** 추가하기 */
+![wishboard 서버 아키텍처](https://user-images.githubusercontent.com/68772751/161036877-e8da7a6f-2df1-428a-81c9-db4be316229d.png)
