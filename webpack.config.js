@@ -51,6 +51,9 @@ module.exports = {
       'process.env.FIREBASE_CLIENT_X509_CERT_URI': JSON.stringify(
         process.env.FIREBASE_CLIENT_X509_CERT_URI,
       ),
+      'process.env.SLACK_API_TOKEN': JSON.stringify(
+        process.env.SLACK_API_TOKEN,
+      ),
     }),
   ],
   stats: {

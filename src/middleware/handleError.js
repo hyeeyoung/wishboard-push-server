@@ -1,5 +1,6 @@
 const { GeneralError } = require('../utils/errors');
 const logger = require('../config/winston');
+const Slack = require('../lib/slack');
 
 const handleErrors = (err, req, res, next) => {
   logger.error(err);
@@ -9,6 +10,17 @@ const handleErrors = (err, req, res, next) => {
       message: err.message,
     });
   }
+  Slack.sendMessage({
+    color: Slack.Colors.danger,
+    title: 'wishboard 서버 에러',
+    text: err,
+    fields: [
+      {
+        title: 'Error Stack:',
+        value: `\`\`\`${err.stack}\`\`\``,
+      },
+    ],
+  });
   return res.status(500).json({
     success: false,
     message: 'wishboard 서버 에러',
