@@ -72,10 +72,11 @@ jobs:
 
       - name: Sharing files between jobs.
         if: ${{ github.base_ref == 'main' }} 
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: ./dist
+          retention-days: 3
 
   deploy:
     needs: build
@@ -84,7 +85,7 @@ jobs:
     steps:  
       # build job에서 빌드한 파일(./dist/pushScheduler.js) 가져오기
       - name: Sharing files between jobs.
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: dist
       # aws s3에 빌드 파일 저장
