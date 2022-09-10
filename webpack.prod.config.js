@@ -16,14 +16,9 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.PORT': JSON.stringify(process.env.PORT),
-      'process.env.DB_DEV_HOST': JSON.stringify(process.env.DB_DEV_HOST),
-      'process.env.DB_DEV_USER': JSON.stringify(process.env.DB_DEV_USER),
-      'process.env.DB_DEV_PASSWORD': JSON.stringify(
-        process.env.DB_DEV_PASSWORD,
-      ),
-      'process.env.DB_PORT': JSON.stringify(process.env.DB_PORT),
-      'process.env.DB_DEV_NAME': JSON.stringify(process.env.DB_DEV_NAME),
-      'process.env.JWT_SECRET_KEY': JSON.stringify(process.env.JWT_SECRET_KEY),
+      'process.env.DB_HOST': JSON.stringify(process.env.DB_HOST),
+      'process.env.DB_USER': JSON.stringify(process.env.DB_USER),
+      'process.env.DB_PASSWORD': JSON.stringify(process.env.DB_PASSWORD),
       'process.env.DB_PORT': JSON.stringify(process.env.DB_PORT),
       'process.env.DB_NAME': JSON.stringify(process.env.DB_NAME),
       'process.env.FIREBASE_TYPE': JSON.stringify(process.env.FIREBASE_TYPE),

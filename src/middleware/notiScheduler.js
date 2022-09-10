@@ -6,7 +6,7 @@ const { Strings } = require('../utils/strings');
 const { NotiType } = require('../utils/notiType');
 const Slack = require('../lib/slack');
 
-async function sendFcmTokenToFirebase(message) {
+const sendFcmTokenToFirebase = async (message) => {
   try {
     const response = await firebaseAdmin.messaging().sendAll(message);
     logger.info(SuccessMessage.notiFCMSend);
@@ -56,7 +56,10 @@ async function sendFcmTokenToFirebase(message) {
     }
     return false;
   }
-}
+};
+// async function sendFcmTokenToFirebase(message) {
+
+// }
 
 module.exports = {
   /*
