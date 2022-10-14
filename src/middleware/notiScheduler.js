@@ -73,9 +73,22 @@ module.exports = {
         Object.keys(notiList).forEach((token) => {
           const numOfNotiItems = notiList[token].length;
           const message = {
-            notification: {
-              title: Strings.notiMessageTitle,
-              body: '',
+            android: {
+              data: {
+                title: Strings.notiMessageTitle,
+                body: pushMessage.body,
+              },
+            },
+            apns: {
+              payload: {
+                aps: {
+                  contentAvailable: true,
+                  alert: {
+                    title: pushMessage.title,
+                    body: pushMessage.body,
+                  },
+                },
+              },
             },
             token: '',
           };
