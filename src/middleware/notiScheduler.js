@@ -3,7 +3,6 @@ const logger = require('../config/winston');
 const { SuccessMessage, ErrorMessage } = require('../utils/response');
 const Noti = require('../models/noti');
 const { Strings } = require('../utils/strings');
-const { NotiType } = require('../utils/notiType');
 const Slack = require('../lib/slack');
 
 const sendFcmTokenToFirebase = async (message) => {
@@ -57,9 +56,6 @@ const sendFcmTokenToFirebase = async (message) => {
     return false;
   }
 };
-// async function sendFcmTokenToFirebase(message) {
-
-// }
 
 module.exports = {
   /*
@@ -93,13 +89,11 @@ module.exports = {
             token: '',
           };
           if (numOfNotiItems === 1) {
-            message.notification.body = `${Strings.after30minutes} ${
-              NotiType[notiList[token][0].notiType]
-            } ${Strings.notiMessageDescription}`;
+            message.android.data.body = `${Strings.after30minutes} ${notiList[token][0].notiType} ${Strings.notiMessageDescription}`;
+            message.apns.payload.aps.alert.body = `${Strings.after30minutes} ${notiList[token][0].notiType} ${Strings.notiMessageDescription}`;
           } else {
-            message.notification.body = `${Strings.after30minutes} ${
-              NotiType[notiList[token][0].notiType]
-            } 외 ${numOfNotiItems}개의 ${Strings.notiMessageCountDescription}`;
+            message.android.data.body = `${Strings.after30minutes} ${notiList[token][0].notiType} 외 ${numOfNotiItems}개의 ${Strings.notiMessageCountDescription}`;
+            message.apns.payload.aps.alert.body = `${Strings.after30minutes} ${notiList[token][0].notiType} 외 ${numOfNotiItems}개의 ${Strings.notiMessageCountDescription}`;
           }
           message.token = token;
           messages.push(message);
