@@ -11,7 +11,7 @@ module.exports = {
   sendPushNotification: async function () {
     await Noti.selectNotiFrom30minAgo()
       .then((notiList) => {
-        sendFcmTokenToFirebase(notiList, messages).catch(() => {
+        sendFcmTokenToFirebase(notiList).catch(() => {
           logger.error(ErrorMessage.notiSendFailed);
         });
       })

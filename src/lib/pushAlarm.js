@@ -1,10 +1,10 @@
 const { firebaseAdmin } = require('../config/firebaseAdmin');
 const logger = require('../config/winston');
 const { SuccessMessage, ErrorMessage } = require('../utils/response');
-const Strings = require('../utils/strings');
+const { Strings } = require('../utils/strings');
 const Slack = require('../lib/slack');
 
-const sendFcmTokenToFirebase = async (message) => {
+const sendFcmTokenToFirebase = async (notiList) => {
   try {
     const messages = [];
     Object.keys(notiList).forEach((token) => {
@@ -45,7 +45,7 @@ const sendFcmTokenToFirebase = async (message) => {
       messages.push(message);
     });
 
-    const response = await firebaseAdmin.messaging().sendAll(message);
+    const response = await firebaseAdmin.messaging().sendAll(messages);
     logger.info(SuccessMessage.notiFCMSend);
     Slack.sendMessage({
       color: Slack.Colors.info,
@@ -57,7 +57,7 @@ const sendFcmTokenToFirebase = async (message) => {
       const failedTokens = [];
       response.responses.forEach((resp, idx) => {
         if (!resp.success) {
-          failedTokens.push(message[idx]);
+          failedTokens.push(messages[idx]);
         }
       });
       // 실패 토큰에 한하여 재전송
