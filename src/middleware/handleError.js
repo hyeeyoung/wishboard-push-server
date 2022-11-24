@@ -3,7 +3,12 @@ const logger = require('../config/winston');
 const Slack = require('../lib/slack');
 
 const handleErrors = (err, req, res, next) => {
-  logger.error(err);
+  if (process.env.NODE_ENV === 'production') {
+    logger.error(err);
+  } else {
+    logger.error(err.stack);
+  }
+
   if (err instanceof GeneralError) {
     return res.status(err.getCode()).json({
       success: false,
