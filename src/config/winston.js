@@ -3,7 +3,7 @@ const WinstonDaily = require('winston-daily-rotate-file');
 const { combine, timestamp, printf, colorize } = winston.format;
 const appRoot = require('app-root-path');
 
-const logDir = `${appRoot}/logs`;
+const logDir = `${appRoot}/logs/push`;
 const logFormat = printf((info) => {
   return `${info.timestamp} [${info.level}] : ${info.message}`;
 });
