@@ -4,7 +4,7 @@ const Slack = require('../lib/slack');
 
 const handleErrors = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
-    logger.error(err);
+    logger.error(err.stack);
   } else {
     logger.error(err.stack);
   }
