@@ -45,25 +45,39 @@ const sendFcmTokenToFirebase = async (notiList) => {
       messages.push(message);
     });
 
-    const response = await firebaseAdmin.messaging().sendAll(messages);
-    logger.info(SuccessMessage.notiFCMSend);
-    // failureCount 존재 시 예외처리
-    if (response.failureCount > 0) {
-      const failedTokens = [];
-      response.responses.forEach((resp, idx) => {
-        if (!resp.success) {
-          failedTokens.push(messages[idx]);
-        }
-      });
-      // 실패 토큰에 한하여 재전송
-      const reResponse = await firebaseAdmin.messaging().sendAll(failedTokens);
-      logger.info(`${SuccessMessage.notiFCMSend}`);
+    const failedTokens = [];
+    messages.forEach(async (message) => {
+      const response = await firebaseAdmin.messaging().send(message);
+      logger.info(SuccessMessage.notiFCMSend);
+      // failureCount 존재 시 예외처리
+      if (response.failureCount > 0) {
+        response.responses.forEach((resp, idx) => {
+          if (!resp.success) {
+            failedTokens.push(messages[idx]);
+          }
+        });
+        // 실패 토큰에 한하여 재전송
+        const reResponse = await firebaseAdmin.messaging().send(failedTokens);
+        logger.info(SuccessMessage.notiFCMSend);
+        Slack.sendMessage({
+          color: Slack.Colors.warning,
+          title: '푸쉬 알림 실패에 따른 재전송 성공 여부 Responses',
+          text: `\`\`\`${JSON.stringify(reResponse)}\`\`\``,
+        });
+      }
+    });
+
+    failedTokens.forEach(async (failedTokenMessage) => {
+      const reResponse = await firebaseAdmin
+        .messaging()
+        .send(failedTokenMessage);
+      logger.info(SuccessMessage.notiFCMSend);
       Slack.sendMessage({
         color: Slack.Colors.warning,
         title: '푸쉬 알림 실패에 따른 재전송 성공 여부 Responses',
         text: `\`\`\`${JSON.stringify(reResponse)}\`\`\``,
       });
-    }
+    });
     return true;
   } catch (e) {
     const firebaseError = { err: e };
