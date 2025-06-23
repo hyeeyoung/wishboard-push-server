@@ -1,0 +1,49 @@
+name: Push Scheduler
+
+on:
+  schedule:
+    - cron: '0 * * * *' # 매 정각마다 실행 (UTC 기준)
+  workflow_dispatch: # 수동 실행도 가능
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      # .env 파일 생성
+      - name: Create .env file
+        run: |
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+
+          echo DB_DEV_HOST=${{ secrets.DB_DEV_HOST }} >> .env
+          echo DB_DEV_USER=${{ secrets.DB_DEV_USER }} >> .env
+          echo DB_DEV_PASSWORD=${{ secrets.DB_DEV_PASSWORD }} >> .env
+          echo DB_DEV_NAME=${{ secrets.DB_DEV_NAME }} >> .env
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+
+          echo FIREBASE_TYPE=${{ secrets.FIREBASE_TYPE }} >> .env
+          echo FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} >> .env
+          echo FIREBASE_PRIVATE_KEY_ID=${{ secrets.FIREBASE_PRIVATE_KEY_ID }} >> .env
+          echo FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} >> .env
+          echo FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }} >> .env
+          echo FIREBASE_CLIENT_ID=${{ secrets.FIREBASE_CLIENT_ID }} >> .env
+          echo FIREBASE_AUTH_URI=${{ secrets.FIREBASE_AUTH_URI }} >> .env
+          echo FIREBASE_TOKEN_URI=${{ secrets.FIREBASE_TOKEN_URI }} >> .env
+          echo FIREBASE_AUTH_PROVIDER_X509_CERT_URI=${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URI }} >> .env
+          echo FIREBASE_CLIENT_X509_CERT_URI=${{ secrets.FIREBASE_CLIENT_X509_CERT_URI }} >> .env
+
+          echo SLACK_API_TOKEN=${{ secrets.SLACK_API_TOKEN }} >> .env
+
+      - name: Run push notification scheduler
+        run: node ./githubActionMain.js
