@@ -43,6 +43,7 @@ const server = app.listen(port, () => {
   /** 앱 시작과 동시에 푸쉬알림 스케줄러 실행 */
   logger.info(SuccessMessage.notiSchedulerStart);
   schedule.scheduleJob('0/30 * * * *', function () {
+    console.log('hihi');
     schduleService.sendPushNotification();
   });
 });
