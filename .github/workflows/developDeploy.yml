@@ -11,7 +11,7 @@ on:
         required: false
         default: 'main'
       AWS_BUILD_BUCKET:
-        description: 'S3 Bucket Name (optional)'
+        description: 'Override S3 Bucket Name (optional)'
         required: false
       AWS_ACCESS_KEY_ID:
         description: 'Override AWS_ACCESS_KEY_ID (optional)'
@@ -27,11 +27,6 @@ jobs:
       matrix:
         node-version: [16.13.2] # 개발환경과 동일하게 맞춤
         
-    env:
-      AWS_ACCESS_KEY_ID: ${{ github.event.inputs.AWS_ACCESS_KEY_ID || secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY || secrets.AWS_SECRET_ACCESS_KEY }}
-      BUCKET_NAME: ${{ github.event.inputs.bucket_name || secrets.AWS_BUILD_BUCKET }}
-
     steps:
       # 브랜치에 checkout해 코드를 가져온다
       - name: Checkout source code.
@@ -82,13 +77,22 @@ jobs:
       - name: Run build (dev)
         run: |
           npm run build --if-present
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID != '' && github.event.inputs.AWS_ACCESS_KEY_ID || secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY != '' && github.event.inputs.AWS_SECRET_ACCESS_KEY || secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      
+      - name: Set AWS_BUILD_BUCKET
+        run: |
+          echo "AWS_BUILD_BUCKET=${{ github.event.inputs.AWS_BUILD_BUCKET != '' && github.event.inputs.AWS_BUILD_BUCKET || secrets.AWS_BUILD_BUCKET }}" >> $GITHUB_ENV
           
         # S3에 빌드 파일 저장
       - name: Build file upload to S3 and PM2 script
-        env:
-          AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-          AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
         run: |
+          AWS_BUILD_BUCKET=${{ github.event.inputs.AWS_BUILD_BUCKET != '' && github.event.inputs.AWS_BUILD_BUCKET || secrets.AWS_BUILD_BUCKET }}
           aws s3 cp \
             --recursive \
             --region ap-northeast-2 \
