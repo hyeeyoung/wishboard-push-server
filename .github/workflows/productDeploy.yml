@@ -3,6 +3,21 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy (default: main)'
+        required: false
+        default: 'main'
+      AWS_BUILD_BUCKET:
+        description: 'S3 Bucket Name (optional)'
+        required: false
+      AWS_ACCESS_KEY_ID:
+        description: 'Override AWS_ACCESS_KEY_ID (optional)'
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        description: 'Override AWS_SECRET_ACCESS_KEY (optional)'
+        required: false
 
 jobs:
   prod_CICD:
@@ -10,6 +25,11 @@ jobs:
     strategy:
       matrix:
         node-version: [16.13.2] # 개발환경과 동일하게 맞춤
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ github.event.inputs.AWS_ACCESS_KEY_ID || secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY || secrets.AWS_SECRET_ACCESS_KEY }}
+      BUCKET_NAME: ${{ github.event.inputs.bucket_name || secrets.AWS_BUILD_BUCKET }}
 
     steps:
       # 브랜치에 checkout해 코드를 가져온다
@@ -69,10 +89,10 @@ jobs:
         # S3에 빌드 파일 저장
       - name: Build file upload to S3 and PM2 script
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+          AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
         run: |
           aws s3 cp \
             --recursive \
             --region ap-northeast-2 \
-            dist s3://wishboard-prod2-build
+            dist s3://$AWS_BUILD_BUCKET
